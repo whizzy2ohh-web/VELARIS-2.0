@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velaris — Digital Solutions & Documentation</title>
+  <meta name="description" content="We create stunning websites and handle all your industry paperwork, so you can focus on what matters most — growing your business." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & BASE ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --bg:         #0a0b0e;
+      --bg2:        #0e1016;
+      --gold:       hsl(45,80%,50%);
+      --gold-light: hsl(45,90%,62%);
+      --gold-dark:  hsl(45,70%,38%);
+      --foreground: #f7f7f8;
+      --muted:      rgba(180,185,200,0.60);
+      --border:     rgba(255,255,255,0.08);
+      --glass-bg:   rgba(14,16,22,0.80);
+      --glass-dark: rgba(10,11,14,0.90);
+      --radius:     0.625rem;
+    }
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: linear-gradient(135deg,#0a0b0e,#0f1218,#0a0b0e);
+      color: var(--foreground);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0b0e; }
+    ::-webkit-scrollbar-thumb { background: #2b303b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+
+    /* ─── UTILITY ────────────────────────────────────────────── */
+    .text-gold   { color: var(--gold); }
+    .text-muted  { color: var(--muted); }
+    .text-white  { color: #fff; }
+    .container   { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+    }
+    .glass-dark {
+      background: var(--glass-dark);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────────── */
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 20px rgba(230,179,25,0.28); }
+      50%      { box-shadow: 0 0 45px rgba(230,179,25,0.55); }
+    }
+    @keyframes pulse { 50% { opacity: .5; } }
+    @keyframes bounce {
+      0%,100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(.8,0,1,1); }
+      50%      { transform: none; animation-timing-function: cubic-bezier(0,0,.2,1); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fade-in-up {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .animate-float      { animation: float 6s ease-in-out infinite; }
+    .animate-pulse      { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+    .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-bounce     { animation: bounce 1s infinite; }
+    .text-glow-gold     { text-shadow: 0 0 24px hsla(45,80%,50%,.50); }
+    .delay-1000 { animation-delay: 1s; }
+
+    /* ─── NAVIGATION ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:50;
+      transition: all .3s;
+      padding: 1.25rem 0;
+    }
+    nav.scrolled {
+      padding: .75rem 0;
+    }
+    nav.scrolled .nav-inner { background: var(--glass-dark); }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 80rem; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: .75rem;
+      text-decoration: none;
+    }
+    .nav-logo img { height: 2.5rem; width: auto; }
+    .nav-logo-text {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem; font-weight:700;
+      color: var(--gold);
+      letter-spacing: .08em;
+    }
+    .nav-links { display:flex; align-items:center; gap:2rem; }
+    .nav-links button {
+      background:none; border:none; cursor:pointer;
+      font-family:'Rajdhani',sans-serif; font-size:.9rem; font-weight:500;
+      color: var(--muted); letter-spacing:.04em;
+      transition: color .2s;
+    }
+    .nav-links button:hover { color: var(--gold); }
+    .nav-cta { display:block; }
+    .btn {
+      display: inline-flex; align-items:center; gap:.5rem;
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      border-radius: var(--radius); cursor:pointer;
+      transition: background .2s, transform .15s;
+      text-decoration:none; border:none;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--gold); color: #0a0b0e;
+      padding: .65rem 1.5rem; font-size:.95rem;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-lg { padding: .9rem 2rem; font-size:1.1rem; }
+    .btn-outline {
+      background: transparent; color: var(--gold);
+      border: 1.5px solid rgba(230,179,25,.45);
+      padding: .9rem 2rem; font-size:1.1rem;
+    }
+    .btn-outline:hover { background: rgba(230,179,25,.08); }
+
+    /* Mobile menu toggle */
+    .nav-hamburger {
+      display:none; background:none; border:none; cursor:pointer;
+      color: var(--gold); padding:.25rem;
+    }
+    .nav-hamburger svg { display:block; }
+    .mobile-menu {
+      display:none; flex-direction:column; gap:1rem;
+      padding: 1rem 1.5rem 1.25rem;
+      border-top: 1px solid var(--border);
+      max-width: 80rem; margin:0 auto;
+    }
+    .mobile-menu button {
+      background:none; border:none; cursor:pointer; text-align:left;
+      font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:500;
+      color:var(--muted); transition:color .2s;
+    }
+    .mobile-menu button:hover { color:var(--gold); }
+    .mobile-menu .btn-primary { width:100%; justify-content:center; }
+    .mobile-menu.open { display:flex; }
+
+    @media(max-width:767px) {
+      .nav-links, .nav-cta { display:none; }
+      .nav-hamburger { display:block; }
+    }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    #home {
+      position:relative; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      padding-top: 5rem; text-align:center;
+      overflow:hidden;
+    }
+    .hero-bg {
+      position:absolute; inset:0; pointer-events:none;
+    }
+    .orb {
+      position:absolute; border-radius:9999px;
+      filter: blur(64px);
+    }
+    .orb-1 { width:24rem; height:24rem; top:25%; left:25%; background:rgba(230,179,25,.06); }
+    .orb-2 { width:24rem; height:24rem; bottom:25%; right:25%; background:rgba(230,179,25,.05); }
+    .orb-3 { width:37.5rem; height:37.5rem; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(230,179,25,.04); }
+    .hero-content {
+      position:relative; z-index:1;
+      max-width:56rem; margin:0 auto; padding:0 1.5rem;
+      animation: fade-in-up .8s ease both;
+    }
+    .hero-logo {
+      margin-bottom:2rem;
+    }
+    .hero-logo img {
+      height:14rem; width:auto; margin:0 auto;
+      display:block; filter: drop-shadow(0 20px 40px rgba(230,179,25,.20));
+    }
+    /* SVG fallback if logo.png missing */
+    .logo-fallback {
+      display:none;
+      font-family:'Cinzel',serif; font-size:4rem; font-weight:900;
+      color:var(--gold); text-shadow:0 0 30px rgba(230,179,25,.4);
+      margin-bottom:1rem; letter-spacing:.1em;
+    }
+    .hero-tagline {
+      display:flex; align-items:center; justify-content:center;
+      gap:.6rem; margin-bottom:1.5rem;
+    }
+    .hero-tagline span {
+      font-size:.8rem; font-weight:600; letter-spacing:.18em;
+      text-transform:uppercase; color:var(--gold);
+    }
+    .sparkle-icon { width:1.1rem; height:1.1rem; color:var(--gold); }
+    h1 {
+      font-family:'Cinzel',serif;
+      font-size:clamp(2.2rem,6vw,4.5rem);
+      font-weight:700; line-height:1.1;
+      margin-bottom:1.25rem;
+    }
+    .hero-sub {
+      font-size:1.1rem; color:var(--muted); max-width:36rem;
+      margin:0 auto 2.5rem; line-height:1.7;
+    }
+    .hero-btns {
+      display:flex; flex-wrap:wrap; align-items:center;
+      justify-content:center; gap:1rem;
+    }
+    .scroll-indicator {
+      position:absolute; bottom:2rem; left:50%;
+      transform:translateX(-50%);
+    }
+    .scroll-pill {
+      width:1.5rem; height:2.5rem;
+      border:2px solid rgba(230,179,25,.45); border-radius:9999px;
+      display:flex; justify-content:center; padding-top:.4rem;
+    }
+    .scroll-dot {
+      width:.375rem; height:.75rem;
+      background:var(--gold); border-radius:9999px;
+    }
+
+    /* ─── SECTIONS ───────────────────────────────────────────── */
+    section { padding: 6rem 0; position:relative; }
+    .section-label {
+      display:block; font-size:.75rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:.75rem;
+    }
+    .section-title {
+      font-family:'Cinzel',serif;
+      font-size:clamp(1.8rem,4vw,3rem);
+      font-weight:700; line-height:1.15;
+      margin-bottom:1.25rem;
+    }
+    .section-desc {
+      color:var(--muted); max-width:36rem;
+      line-height:1.75; font-size:1.05rem;
+    }
+    .section-header { text-align:center; margin-bottom:4rem; }
+
+    /* ─── SERVICE CARDS ──────────────────────────────────────── */
+    .cards-grid {
+      display:grid; grid-template-columns:1fr;
+      gap:2rem;
+    }
+    @media(min-width:768px) {
+      .cards-grid { grid-template-columns:1fr 1fr; }
+    }
+    .service-card {
+      position:relative; border-radius:1rem;
+      padding:2rem; height:100%;
+      border:1px solid var(--border);
+      transition: border-color .3s;
+      background: var(--glass-bg);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      overflow:hidden;
+    }
+    .service-card::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse at top left, rgba(230,179,25,.12) 0%, transparent 70%);
+      opacity:0; transition:opacity .5s; border-radius:inherit;
+      pointer-events:none;
+    }
+    .service-card:hover::before { opacity:1; }
+    .service-card:hover { border-color:rgba(230,179,25,.40); }
+    .card-icon {
+      width:4rem; height:4rem; border-radius:.75rem;
+      background:rgba(230,179,25,.10);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:1.5rem;
+      transition:transform .3s, background .3s;
+    }
+    .service-card:hover .card-icon { transform:scale(1.1); background:rgba(230,179,25,.18); }
+    .card-icon svg { width:2rem; height:2rem; color:var(--gold); }
+    .card-title {
+      font-family:'Cinzel',serif;
+      font-size:1.4rem; font-weight:700; color:#fff;
+      margin-bottom:.75rem;
+    }
+    .card-desc { color:var(--muted); line-height:1.75; margin-bottom:1.25rem; font-size:1rem; }
+    .card-list { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+    .card-list li {
+      display:flex; align-items:center; gap:.75rem;
+      font-size:.9rem; color:var(--muted);
+    }
+    .card-list li::before {
+      content:''; flex-shrink:0;
+      width:.4rem; height:.4rem; border-radius:9999px;
+      background:var(--gold);
+    }
+
+    /* ─── FEATURES GRID ──────────────────────────────────────── */
+    #about { background: linear-gradient(to bottom,transparent,rgba(230,179,25,.035),transparent); }
+    .features-grid {
+      display:grid; grid-template-columns:1fr; gap:2rem;
+    }
+    @media(min-width:640px)  { .features-grid { grid-template-columns:1fr 1fr; } }
+    @media(min-width:1024px) { .features-grid { grid-template-columns:1fr 1fr 1fr; } }
+    .feature-card {
+      border-radius: calc(var(--radius) + .25rem);
+      padding:1.5rem;
+      border:1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      transition: border-color .3s;
+    }
+    .feature-card:hover { border-color:rgba(230,179,25,.28); }
+    .feature-icon {
+      width:3rem; height:3rem; border-radius:.625rem;
+      background:rgba(230,179,25,.10);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:1rem;
+      transition:background .3s;
+    }
+    .feature-card:hover .feature-icon { background:rgba(230,179,25,.18); }
+    .feature-icon svg { width:1.4rem; height:1.4rem; color:var(--gold); }
+    .feature-title { font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700; color:#fff; margin-bottom:.5rem; }
+    .feature-desc { font-size:.9rem; color:var(--muted); line-height:1.7; }
+
+    /* ─── CONTACT ────────────────────────────────────────────── */
+    .contact-box {
+      border-radius:1.5rem; padding:3rem 2rem;
+      border:1px solid rgba(230,179,25,.18);
+      background: var(--glass-bg);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      position:relative; overflow:hidden;
+    }
+    @media(min-width:640px) { .contact-box { padding:3.5rem; } }
+    @media(min-width:1024px) { .contact-box { padding:4rem 4.5rem; } }
+    .contact-box::before {
+      content:''; position:absolute;
+      top:0; right:0; width:24rem; height:24rem;
+      background: radial-gradient(circle,rgba(230,179,25,.10) 0%,transparent 70%);
+      transform:translate(50%,-50%); pointer-events:none;
+    }
+    .contact-grid {
+      display:grid; grid-template-columns:1fr;
+      gap:3rem; align-items:center;
+      position:relative; z-index:1;
+    }
+    @media(min-width:1024px) {
+      .contact-grid { grid-template-columns:1fr 1fr; }
+    }
+    .contact-meta { display:flex; flex-direction:column; gap:1.25rem; margin-top:2rem; }
+    .contact-row {
+      display:flex; align-items:flex-start; gap:1rem;
+    }
+    .contact-icon-wrap {
+      width:3rem; height:3rem; border-radius:.625rem; flex-shrink:0;
+      background:rgba(230,179,25,.10);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .contact-icon-wrap svg { width:1.25rem; height:1.25rem; color:var(--gold); }
+    .contact-row p:first-child { font-size:.82rem; color:var(--muted); margin-bottom:.2rem; }
+    .contact-row p:not(:first-child), .contact-row a { color:#fff; font-weight:600; font-size:.97rem; }
+    .contact-row a { color:var(--gold); text-decoration:none; transition:color .2s; }
+    .contact-row a:hover { color:var(--gold-light); }
+    .contact-right { text-align:center; }
+    @media(min-width:1024px) { .contact-right { text-align:right; } }
+    .contact-right img {
+      height:6rem; width:auto; opacity:.75;
+      margin:0 auto 1.5rem; display:block;
+    }
+    @media(min-width:1024px) { .contact-right img { margin-left:auto; margin-right:0; } }
+    .contact-right p { color:var(--muted); margin-bottom:1.5rem; line-height:1.65; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      padding:3rem 0; border-top:1px solid var(--border);
+    }
+    .footer-grid {
+      display:grid; grid-template-columns:1fr;
+      gap:2rem; margin-bottom:2rem;
+    }
+    @media(min-width:768px) { .footer-grid { grid-template-columns:1fr 1fr 1fr; } }
+    .footer-brand { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+    .footer-brand img { height:2.25rem; width:auto; }
+    .footer-brand-name {
+      font-family:'Cinzel',serif; font-size:1.1rem;
+      font-weight:700; color:var(--gold); letter-spacing:.07em;
+    }
+    .footer-desc { font-size:.9rem; color:var(--muted); line-height:1.7; }
+    .footer-col h4 { font-size:.97rem; font-weight:700; color:#fff; margin-bottom:.9rem; letter-spacing:.04em; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+    .footer-col button, .footer-col a {
+      background:none; border:none; cursor:pointer; text-align:left;
+      font-family:'Rajdhani',sans-serif; font-size:.9rem;
+      color:var(--muted); text-decoration:none;
+      display:inline-flex; align-items:center; gap:.5rem;
+      transition:color .2s;
+    }
+    .footer-col button:hover, .footer-col a:hover { color:var(--gold); }
+    .footer-col svg { width:1rem; height:1rem; }
+    .footer-bottom {
+      padding-top:2rem; border-top:1px solid var(--border);
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:space-between; gap:1rem;
+    }
+    @media(min-width:640px) { .footer-bottom { flex-direction:row; } }
+    .footer-bottom p { font-size:.85rem; color:var(--muted); }
+    .footer-craft {
+      display:flex; align-items:center; gap:.4rem;
+      font-size:.85rem; color:var(--muted);
+    }
+    .footer-craft svg { width:.9rem; height:.9rem; color:var(--gold); }
+
+    /* ─── INLINE SVG ICONS ───────────────────────────────────── */
+    /* Icons are inlined via JS below to keep HTML clean */
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner" id="nav-inner">
+    <a class="nav-logo" href="#home" onclick="scrollTo('home');return false;">
+      <img src="logo.png" alt="Velaris" id="nav-logo-img"
+           onerror="this.style.display='none';document.getElementById('nav-logo-fallback').style.display='block'">
+      <span id="nav-logo-fallback" style="display:none;font-family:'Cinzel',serif;font-size:1.3rem;font-weight:900;color:var(--gold);">V</span>
+      <span class="nav-logo-text">VELARIS</span>
+    </a>
+
+    <div class="nav-links">
+      <button onclick="scrollTo('home')">Home</button>
+      <button onclick="scrollTo('services')">Services</button>
+      <button onclick="scrollTo('about')">About</button>
+      <button onclick="scrollTo('contact')">Contact</button>
+    </div>
+
+    <a class="btn btn-primary nav-cta" href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+      Get Support
+    </a>
+
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6"  x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+      <svg id="close-icon" style="display:none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6"  x2="6"  y2="18" />
+        <line x1="6"  y1="6"  x2="18" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <button onclick="scrollTo('home')">Home</button>
+    <button onclick="scrollTo('services')">Services</button>
+    <button onclick="scrollTo('about')">About</button>
+    <button onclick="scrollTo('contact')">Contact</button>
+    <a class="btn btn-primary" href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+      Get Support
+    </a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════ -->
+<section id="home">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="orb orb-1 animate-pulse"></div>
+    <div class="orb orb-2 animate-pulse delay-1000"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-logo animate-float">
+      <img src="logo.png" alt="Velaris"
+           onerror="this.style.display='none';document.querySelector('.logo-fallback').style.display='block'">
+      <div class="logo-fallback">VELARIS</div>
+    </div>
+
+    <div class="hero-tagline">
+      <!-- sparkle -->
+      <svg class="sparkle-icon animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
+        <path d="M5 3l.75 2.25L8 6l-2.25.75L5 9l-.75-2.25L2 6l2.25-.75z"/>
+        <path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/>
+      </svg>
+      <span>Digital Solutions &amp; Documentation</span>
+      <svg class="sparkle-icon animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
+        <path d="M5 3l.75 2.25L8 6l-2.25.75L5 9l-.75-2.25L2 6l2.25-.75z"/>
+        <path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/>
+      </svg>
+    </div>
+
+    <h1>
+      <span class="text-white">Building Your</span><br>
+      <span class="text-gold text-glow-gold">Digital Future</span>
+    </h1>
+
+    <p class="hero-sub">
+      We create stunning websites and handle all your industry paperwork,
+      so you can focus on what matters most — growing your business.
+    </p>
+
+    <div class="hero-btns">
+      <a class="btn btn-primary btn-lg animate-pulse-glow"
+         href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+        Start Your Project
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+      <button class="btn btn-outline" onclick="scrollTo('services')">
+        Explore Services
+      </button>
+    </div>
+  </div>
+
+  <div class="scroll-indicator animate-bounce" aria-hidden="true">
+    <div class="scroll-pill">
+      <div class="scroll-dot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICES ══════════════════════════════════════════════ -->
+<section id="services">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">What We Do</span>
+      <h2 class="section-title">Our <span class="text-gold">Services</span></h2>
+      <p class="section-desc" style="margin:0 auto">
+        From cutting-edge web development to seamless documentation handling,
+        we provide comprehensive solutions for your business needs.
+      </p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Web Development -->
+      <div class="service-card">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Web Development</h3>
+        <p class="card-desc">
+          Custom websites built with modern technologies. From landing pages to
+          full-scale web applications, we deliver responsive, fast, and beautiful digital experiences.
+        </p>
+        <ul class="card-list">
+          <li>Custom Website Design</li>
+          <li>E-Commerce Solutions</li>
+          <li>Web Applications</li>
+          <li>SEO Optimization</li>
+        </ul>
+      </div>
+
+      <!-- Industry Paperwork -->
+      <div class="service-card">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Industry Paperwork</h3>
+        <p class="card-desc">
+          Navigate complex documentation with ease. We handle business registrations,
+          compliance documents, permits, and all industry-specific paperwork requirements.
+        </p>
+        <ul class="card-list">
+          <li>Business Registration</li>
+          <li>Compliance Documents</li>
+          <li>Permit Applications</li>
+          <li>Legal Documentation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT / FEATURES ══════════════════════════════════════ -->
+<section id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Why Velaris</span>
+      <h2 class="section-title">The <span class="text-gold">Velaris</span> Advantage</h2>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Fast Delivery</h3>
+        <p class="feature-desc">Quick turnaround times without compromising on quality. We deliver on schedule, every time.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Reliable &amp; Secure</h3>
+        <p class="feature-desc">Your data and projects are handled with utmost security and professionalism.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">24/7 Support</h3>
+        <p class="feature-desc">Round-the-clock assistance through our Telegram support channel for all your queries.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
+            <path d="M5 3l.75 2.25L8 6l-2.25.75L5 9l-.75-2.25L2 6l2.25-.75z"/>
+            <path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Modern Design</h3>
+        <p class="feature-desc">Cutting-edge, futuristic designs that make your brand stand out from the competition.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Global Reach</h3>
+        <p class="feature-desc">Services tailored for businesses worldwide, with understanding of local requirements.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Clear Communication</h3>
+        <p class="feature-desc">Transparent updates and open communication throughout your project journey.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <div class="contact-grid">
+
+        <!-- Left -->
+        <div>
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-title">Ready to <span class="text-gold">Start?</span></h2>
+          <p class="section-desc">
+            Reach out to us today and let's discuss how we can help transform
+            your digital presence and handle your documentation needs.
+          </p>
+
+          <div class="contact-meta">
+            <div class="contact-row">
+              <div class="contact-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38a2 2 0 0 1 1.81-2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div>
+                <p>Call Us</p>
+                <p>+234 916 410 4177</p>
+                <p>+234 807 215 0484</p>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p>Telegram Support</p>
+                <a href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">@VelarisSupport</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="contact-right">
+          <img src="logo.png" alt="Velaris"
+               onerror="this.style.display='none'">
+          <p>Join our Telegram channel for instant support and updates</p>
+          <a class="btn btn-primary btn-lg animate-pulse-glow"
+             href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Contact Support
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div>
+        <div class="footer-brand">
+          <img src="logo.png" alt="Velaris" onerror="this.style.display='none'">
+          <span class="footer-brand-name">VELARIS</span>
+        </div>
+        <p class="footer-desc">
+          Building digital futures and handling industry paperwork with precision and professionalism.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><button onclick="scrollTo('home')">Home</button></li>
+          <li><button onclick="scrollTo('services')">Services</button></li>
+          <li><button onclick="scrollTo('about')">About</button></li>
+          <li><button onclick="scrollTo('contact')">Contact</button></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li>
+            <a href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Customer Care
+            </a>
+          </li>
+          <li>
+            <a href="https://t.me/+SB80jlqE-ng0ZWE0" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38a2 2 0 0 1 1.81-2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              Help Center
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="year"></span> Velaris. All rights reserved.</p>
+      <div class="footer-craft">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
+        </svg>
+        <span>Crafted with excellence</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ── Sticky nav
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    const inner = document.getElementById('nav-inner');
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+      inner.classList.add('glass-dark');
+    } else {
+      nav.classList.remove('scrolled');
+      inner.classList.remove('glass-dark');
+    }
+  });
+
+  // ── Smooth scroll
+  function scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      // close mobile menu
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.getElementById('hamburger-icon').style.display = '';
+      document.getElementById('close-icon').style.display = 'none';
+    }
+  }
+
+  // ── Mobile menu toggle
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = menu.classList.toggle('open');
+    document.getElementById('hamburger-icon').style.display = open ? 'none' : '';
+    document.getElementById('close-icon').style.display = open ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
